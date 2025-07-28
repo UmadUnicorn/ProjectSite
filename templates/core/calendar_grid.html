@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load project_filters %}
+{% block title %}Календарь мероприятий{% endblock %}
+
+{% block content %}
+<h2>Календарь — {{ month_name }} {{ year }}</h2>
+
+<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+    <a class="btn" href="?month={{ month|add:"-1" }}&year={{ year }}">← Предыдущий</a>
+    <a class="btn" href="?month={{ month|add:"1" }}&year={{ year }}">Следующий →</a>
+</div>
+
+<div class="calendar-grid">
+    {% for day_name in day_names %}
+        <div class="calendar-cell calendar-header">{{ day_name }}</div>
+    {% endfor %}
+
+    {% for y, m, d, weekday in days %}
+        {% if m != month %}
+            <div class="calendar-cell other-month"></div>
+        {% else %}
+            <div class="calendar-cell">
+                <div class="calendar-day">{{ d }}</div>
+                <div class="calendar-events">
+                    {% for event in events_by_day|get_item:d %}
+                        <div class="event">
+                            {{ event.date|date:"d E Y H:i" }} — {{ event.name }}
+                        </div>
+                    {% empty %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

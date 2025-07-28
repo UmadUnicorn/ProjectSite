@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ project.title }}</h2>
+
+<div style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <button class="btn" onclick="togglePassport()">📄 Паспорт проекта</button>
+    <a class="btn" href="{% url 'project_edit' project.pk %}">✏️ Редактировать</a>
+</div>
+
+<div id="passport" class="section passport-wrapper">
+    <p><strong>Описание:</strong> {{ project.description }}</p>
+    <p><strong>Предпосылки:</strong> {{ project.background }}</p>
+    <p><strong>Статус:</strong> {{ project.status }}</p>
+    <p><strong>Актуальность:</strong> {{ project.relevance }}</p>
+
+    <h3>Цель</h3>
+    <p>{{ project.goal }}</p>
+
+    <h3>Метрики</h3>
+    {% if project.metrics %}
+        <ul>
+        {% for metric in project.metrics %}
+            <li><strong>{{ metric.name }}</strong> — цель: {{ metric.target }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Метрики не заданы.</p>
+    {% endif %}
+
+    <h3>Результаты:</h3>
+    <p>{{ project.results }}</p>
+
+    <h3>Команда:</h3>
+    {% if project.team %}
+        <ul>
+        {% for member in project.team %}
+            <li>{{ member.fio }} — {{ member.phone }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет команды.</p>
+    {% endif %}
+
+    <h3>Стейкхолдеры:</h3>
+    <p><strong>Целевая аудитория:</strong> {{ project.audience }}</p>
+    <p><strong>Вид мероприятия:</strong> {{ project.event_type }}</p>
+
+    <h3>Риски:</h3>
+    {% if project.risks %}
+        <ul>
+        {% for risk in project.risks %}
+            <li>{{ risk.risk }} — влияние: {{ risk.impact }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет рисков.</p>
+    {% endif %}
+
+    <h3>Ресурсы:</h3>
+    <p><strong>Материальные:</strong> {{ project.material_resources }}</p>
+    <p><strong>Нематериальные:</strong> {{ project.non_material_resources }}</p>
+</div>
+
+<hr>
+
+<div class="section">
+    <h3>Мероприятия</h3>
+    <a class="btn" href="{% url 'event_create' project.pk %}">➕ Добавить мероприятие</a>
+    <ul style="margin-top: 15px;">
+        {% for event in project.events.all %}
+            <li style="margin-bottom: 10px;">
+                {{ event.date|date:"d E Y H:i" }} — {{ event.name }}
+                <a class="btn" style="margin-left: 10px;" href="{% url 'event_detail' project.pk event.pk %}">✏️ Отчёт</a>
+            </li>
+        {% empty %}
+            <li>Мероприятий пока нет.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    function togglePassport() {
+        const div = document.getElementById('passport');
+        div.classList.toggle('open');
+    }
+</script>
+{% endblock %}

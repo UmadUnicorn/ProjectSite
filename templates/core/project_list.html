@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Мои проекты{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="edit-header">
+        <h2>Мои проекты</h2>
+        <a href="{% url 'project_create' %}" class="btn">➕ Новый проект</a>
+    </div>
+
+    <ul style="margin-top: 20px; list-style: none; padding-left: 0;">
+        {% for project in projects %}
+            <li style="margin-bottom: 12px;">
+                <a href="{% url 'project_detail' project.pk %}"
+                   style="display: inline-block;
+                          padding: 12px 20px;
+                          background: #f2f3f7;
+                          border-radius: 16px;
+                          text-decoration: none;
+                          color: #5a3ec8;
+                          font-weight: 500;
+                          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);">
+                    {{ project.title }}
+                </a>
+            </li>
+        {% empty %}
+            <li style="color: #777;">Проектов пока нет.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

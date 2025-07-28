@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div style="padding: 40px; text-align: center;">
+    <h1 style="color: #e74c3c;">⛔ Доступ запрещён</h1>
+    <p style="margin-top: 10px; font-size: 18px;">
+        У вас нет прав на выполнение этого действия.
+    </p>
+    <a href="{% url 'project_list' %}" class="btn" style="margin-top: 20px;">← Назад к проектам</a>
+</div>
+{% endblock %}

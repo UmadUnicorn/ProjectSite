@@ -1,0 +1,154 @@
+/* =========================================================
+   MAIN.CSS  — единый стиль для всего проекта
+   ========================================================= */
+
+/* ---------- Переменные (легко менять тему) ---------- */
+:root{
+    --brand:#7c6ee5;
+    --brand2:#a89cf04d;      /* 30 % прозрачности */
+    --brand-grad:linear-gradient(90deg,#7c6ee5,#a89cf0);
+    --bg:#f5f7fa;
+    --card:#ffffff;
+    --text:#1e1e1e;
+    --radius:12px;
+    --shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+/* ---------- Базовые настройки ---------- */
+*{box-sizing:border-box}
+body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:var(--bg);color:var(--text);
+    margin:0;padding:20px;
+}
+
+/* ---------- Ссылки и кнопки ---------- */
+a, .btn{transition:background .3s,color .3s,transform .2s;text-decoration:none}
+a:hover{background:rgba(0,0,0,.05)}
+
+.btn{
+    background:var(--brand-grad);color:#fff;
+    border:none;border-radius:var(--radius);
+    padding:8px 16px;font-size:14px;display:inline-block;
+    box-shadow:var(--shadow);
+}
+.btn:hover{background:linear-gradient(90deg,#6a5fd0,#9885e2);transform:translateY(-1px)}
+.btn-small{padding:6px 12px;font-size:13px}
+
+a:focus-visible,.btn:focus-visible{
+    outline:3px solid var(--brand);outline-offset:2px;
+}
+
+/* ---------- Заголовки ---------- */
+h2{margin:0 0 16px;font-size:24px;font-weight:600}
+
+/* ---------- Шапка сайта ---------- */
+.site-header{
+    display:flex;align-items:center;gap:24px;
+    background:var(--card);
+    border-radius:16px;padding:14px 24px;margin-bottom:30px;
+    box-shadow:0 6px 20px rgba(0,0,0,.06);
+}
+.main-nav{display:flex;gap:15px}
+.main-nav a{
+    color:var(--text);font-weight:500;padding:6px 12px;border-radius:8px;
+}
+.main-nav a:hover{background:var(--brand2)}
+.brand{
+    flex:1;text-align:center;font-weight:700;font-size:20px;line-height:1;
+    color:var(--brand);letter-spacing:.5px;
+}
+.user-box{display:flex;align-items:center;gap:8px;font-size:14px}
+.logout-link{
+    background:none;border:none;color:var(--brand);
+    cursor:pointer;text-decoration:underline;padding:0;
+}
+.logout-link:hover{opacity:.8}
+
+/* ---------- Секции / карточки ---------- */
+.section,.calendar-cell{
+    background:var(--card);border-radius:20px;padding:30px;margin-bottom:30px;
+    box-shadow:var(--shadow);
+}
+
+/* ---------- Таблицы ---------- */
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{padding:10px;text-align:left;border-bottom:1px solid #eee}
+th{color:#555;font-weight:600}
+tr:nth-child(even){background:#f9f9f9}
+.metric-list td:first-child{width:50%;white-space:pre-line}
+
+/* ---------- Формы ---------- */
+input[type=text],input[type=number],input[type=date],
+input[type=datetime-local],textarea,select{
+    width:100%;padding:10px;margin-top:5px;
+    border:1px solid #ccc;border-radius:10px;
+    transition:border-color .3s;
+}
+input:focus,textarea:focus,select:focus{
+    border-color:var(--brand);outline:none;
+}
+.save-button{margin-top:20px}
+
+/* ---------- Паспорт (аккордеон) ---------- */
+.passport-wrapper{
+    overflow:hidden;
+    max-height:0;
+    padding:0;
+    transition:max-height .4s ease,padding .3s ease;
+}
+
+.passport-wrapper.open{
+    max-height:500px;          /* ← снова ограничиваем 500 px */
+    padding:20px;
+    overflow-y:auto;           /* ← вертикальная прокрутка */
+}
+
+/* ---------- Списки ---------- */
+ul.event-list{list-style:disc;padding-left:20px}
+ul.event-list li{margin-bottom:8px;line-height:1.4}
+
+/* ---------- Календарь ---------- */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.calendar-cell{
+    aspect-ratio:1/1;          /* квадраты */
+    padding:10px;display:flex;flex-direction:column;overflow:hidden;
+}
+.calendar-header,.other-month{
+    background:transparent;box-shadow:none;font-weight:700;text-align:center
+}
+.calendar-day{font-weight:700;margin-bottom:6px}
+.calendar-events{overflow-y:auto;max-height:100px}
+.calendar-events::-webkit-scrollbar{width:4px}
+.calendar-events::-webkit-scrollbar-thumb{background:var(--brand);border-radius:4px}
+.event{
+    font-size:12px;margin-bottom:4px;padding:2px 4px;border-radius:4px;
+    background:#f0f0ff;border-left:4px solid var(--brand);
+}
+
+/* ---------- Project‑form блоки ---------- */
+.project-form label{font-weight:700;display:block;margin-top:15px}
+.project-form input[type=text],.project-form textarea,.project-form select{
+    padding:8px;border:1px solid #ccc;border-radius:6px;
+    box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+.dynamic-list p{margin:5px 0;padding:5px 10px;background:#f2f2f2;border-radius:5px}
+
+/* ---------- Адаптив ---------- */
+@media(max-width:600px){
+    body{padding:12px}
+    .site-header{flex-wrap:wrap;gap:10px}
+    .brand{order:-1;width:100%;text-align:left;font-size:18px}
+    .main-nav{flex:1 1 100%;order:1;margin:0}
+    h2{font-size:20px}
+}
+
+/* ---------- Dark‑mode ---------- */
+@media(prefers-color-scheme:dark){
+    :root{
+        --bg:#121212;--card:#1e1e1e;--text:#eaeaea;
+        --shadow:0 4px 12px rgba(0,0,0,.4);
+    }
+    a:hover{background:rgba(255,255,255,.07)}
+    .event{background:#26264d;border-left-color:var(--brand)}
+}

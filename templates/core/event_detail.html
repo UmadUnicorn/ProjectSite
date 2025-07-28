@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+{% load project_filters %}
+
+{% block title %}Отчёт по мероприятию{% endblock %}
+
+{% block content %}
+<h2>Отчёт: {{ event.date|date:"d E Y H:i" }} — {{ event.name }}</h2>
+
+<button class="btn" id="toggle-header-button">✏️ Редактировать заголовок</button>
+
+<div id="header-form-wrapper" class="passport-wrapper" style="margin-top: 10px;">
+    <form method="post">
+        {% csrf_token %}
+        {{ header_form.as_p }}
+        <button class="btn" type="submit" name="edit_header">💾 Сохранить заголовок</button>
+    </form>
+</div>
+
+<!-- Форма редактирования метрик -->
+<form method="post" id="metrics-form">
+    {% csrf_token %}
+    <table class="metrics-table">
+        <thead>
+            <tr>
+                <th>Метрика</th>
+                <th>Целевое значение</th>
+                <th>Фактическое значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric in metrics %}
+            <tr>
+                <td>{{ metric.name }}</td>
+                <td>{{ metric.target }}</td>
+                <td>
+                    <input type="text" name="fact_{{ forloop.counter0 }}" value="{{ actual_values|get_item:metric.name }}">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ form }}  {# скрытое поле actual_metrics #}
+    <button class="btn save-button" type="submit">💾 Сохранить данные метрик</button>
+</form>
+
+<hr>
+
+{% if can_edit_metrics %}
+<h3>📷 Загрузить фото с мероприятия</h3>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ photo_form.as_p }}
+    <button class="btn" type="submit" name="upload_photo">➕ Загрузить фото</button>
+</form>
+{% endif %}
+
+{% if photos %}
+<h3>🖼 Фотографии:</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+    {% for photo in photos %}
+        <div>
+            <img src="{{ photo.image.url }}" alt="Фото мероприятия" style="max-width: 200px; max-height: 150px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* ---------- раскрытие/сворачивание формы заголовка ---------- */
+    const toggleBtn = document.getElementById('toggle-header-button');
+    const wrapper   = document.getElementById('header-form-wrapper');
+
+    if (toggleBtn && wrapper) {
+        toggleBtn.addEventListener('click', () => {
+            wrapper.classList.toggle('open');
+        });
+    }
+
+    /* ---------- упаковка метрик перед отправкой ---------- */
+    const form        = document.getElementById('metrics-form');
+    const hiddenField = document.getElementById('id_actual_metrics');
+
+    if (form && hiddenField) {
+        form.addEventListener('submit', () => {
+            const data = {};
+            {% for metric in metrics %}
+                data["{{ metric.name|escapejs }}"] =
+                    document.querySelector('[name="fact_{{ forloop.counter0 }}"]').value;
+            {% endfor %}
+            hiddenField.value = JSON.stringify(data);
+        });
+    }
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Новое мероприятие{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="edit-header">
+        <h2>Новое мероприятие для проекта: {{ project.name }}</h2>
+    </div>
+
+    <form method="post">
+    {% csrf_token %}
+    <div style="margin-bottom: 20px;">
+        {{ form.date.label_tag }}<br>
+        {{ form.date }}
+    </div>
+    <div style="margin-bottom: 20px;">
+        <label for="id_name">Место проведения:</label><br>
+        {{ form.name }}
+    </div>
+    <button type="submit" class="btn">💾 Сохранить</button>
+</form>
+</div>
+{% endblock %}

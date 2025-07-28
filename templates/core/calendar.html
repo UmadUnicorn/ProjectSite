@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Календарь{% endblock %}
+
+{% block content %}
+<h2>Календарь мероприятий</h2>
+
+<div class="section">
+    {% if events %}
+        <ul style="list-style: none; padding-left: 0;">
+            {% for event in events %}
+                <li style="margin-bottom: 12px;">
+                    <span style="font-weight: 600;">{{ event.date|date:"d E Y H:i" }}</span> — {{ event.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет мероприятий</p>
+    {% endif %}
+</div>
+{% endblock %}

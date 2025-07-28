@@ -1,0 +1,210 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Создание проекта</h2>
+
+<form method="post" class="project-form">
+    {% csrf_token %}
+
+    <div class="form-section">
+        <label>{{ form.title.label }}</label>
+        {{ form.title }}
+    </div>
+
+    <div class="form-section">
+        <label>{{ form.description.label }}</label>
+        {{ form.description }}
+    </div>
+
+    <div class="form-section">
+        <label>{{ form.background.label }}</label>
+        {{ form.background }}
+    </div>
+
+    <div class="form-section">
+        <label>{{ form.status.label }}</label>
+        {{ form.status }}
+    </div>
+
+    <div class="form-section">
+        <label>{{ form.relevance.label }}</label>
+        {{ form.relevance }}
+    </div>
+
+    <div class="form-section">
+        <label>{{ form.goal.label }}</label>
+        {{ form.goal }}
+    </div>
+
+    <h3>Метрики</h3>
+    <div id="metrics-list" class="list-display"></div>
+    <button type="button" class="btn" onclick="addMetric()">+ Метрика</button>
+    {{ form.metrics }}
+
+    <div class="form-section">
+        <label>{{ form.results.label }}</label>
+        {{ form.results }}
+    </div>
+
+    <h3>Команда</h3>
+    <div id="team-list" class="list-display"></div>
+    <button type="button" class="btn" onclick="addTeam()">+ Участник</button>
+    {{ form.team }}
+
+    <h3>Стейкхолдеры</h3>
+    <div class="form-section">
+        <label>{{ form.audience.label }}</label>
+        {{ form.audience }}
+    </div>
+    <div class="form-section">
+        <label>{{ form.event_type.label }}</label>
+        {{ form.event_type }}
+    </div>
+
+    <h3>Риски</h3>
+    <div id="risk-list" class="list-display"></div>
+    <button type="button" class="btn" onclick="addRisk()">+ Риск</button>
+    {{ form.risks }}
+
+    <h3>Ресурсы</h3>
+    <div class="form-section">
+        <label>{{ form.material_resources.label }}</label>
+        {{ form.material_resources }}
+    </div>
+    <div class="form-section">
+        <label>{{ form.non_material_resources.label }}</label>
+        {{ form.non_material_resources }}
+    </div>
+
+    <br>
+    <button type="submit" class="btn save-button">Сохранить</button>
+</form>
+
+<script>
+function renderMetrics() {
+    const div = document.getElementById('metrics-list');
+    div.innerHTML = '';
+    const metrics = JSON.parse(document.getElementById('id_metrics').value || '[]');
+    metrics.forEach((m, i) => {
+        const el = document.createElement('p');
+        el.innerHTML = `${m.name} → цель: ${m.target}
+            <button type="button" onclick="editMetric(${i})">✏️</button>
+            <button type="button" onclick="deleteMetric(${i})">🗑</button>`;
+        div.appendChild(el);
+    });
+}
+
+function deleteMetric(index) {
+    const metrics = JSON.parse(document.getElementById('id_metrics').value || '[]');
+    metrics.splice(index, 1);
+    document.getElementById('id_metrics').value = JSON.stringify(metrics);
+    renderMetrics();
+}
+
+function addMetric() {
+    const name = prompt("Введите название метрики:");
+    const target = prompt("Введите целевое значение:");
+    if (!name || !target) return;
+    const metrics = JSON.parse(document.getElementById('id_metrics').value || '[]');
+    metrics.push({name, target});
+    document.getElementById('id_metrics').value = JSON.stringify(metrics);
+    renderMetrics();
+}
+
+function editMetric(index) {
+    const metrics = JSON.parse(document.getElementById('id_metrics').value || '[]');
+    const name = prompt("Измените название метрики:", metrics[index].name);
+    const target = prompt("Измените целевое значение:", metrics[index].target);
+    if (!name || !target) return;
+    metrics[index] = {name, target};
+    document.getElementById('id_metrics').value = JSON.stringify(metrics);
+    renderMetrics();
+}
+
+function renderTeam() {
+    const div = document.getElementById('team-list');
+    div.innerHTML = '';
+    const team = JSON.parse(document.getElementById('id_team').value || '[]');
+    team.forEach((m, i) => {
+        const el = document.createElement('p');
+        el.innerHTML = `${m.fio} — ${m.phone}
+            <button type="button" onclick="editTeam(${i})">✏️</button>
+            <button type="button" onclick="deleteTeam(${i})">🗑</button>`;
+        div.appendChild(el);
+    });
+}
+
+function deleteTeam(index) {
+    const team = JSON.parse(document.getElementById('id_team').value || '[]');
+    team.splice(index, 1);
+    document.getElementById('id_team').value = JSON.stringify(team);
+    renderTeam();
+}
+
+
+function addTeam() {
+    const fio = prompt("Введите ФИО участника:");
+    const phone = prompt("Введите телефон:");
+    if (!fio || !phone) return;
+    const team = JSON.parse(document.getElementById('id_team').value || '[]');
+    team.push({fio, phone});
+    document.getElementById('id_team').value = JSON.stringify(team);
+    renderTeam();
+}
+
+function editTeam(index) {
+    const team = JSON.parse(document.getElementById('id_team').value || '[]');
+    const fio = prompt("Измените ФИО:", team[index].fio);
+    const phone = prompt("Измените телефон:", team[index].phone);
+    if (!fio || !phone) return;
+    team[index] = {fio, phone};
+    document.getElementById('id_team').value = JSON.stringify(team);
+    renderTeam();
+}
+
+function renderRisks() {
+    const div = document.getElementById('risk-list');
+    div.innerHTML = '';
+    const risks = JSON.parse(document.getElementById('id_risks').value || '[]');
+    risks.forEach((r, i) => {
+        const el = document.createElement('p');
+        el.innerHTML = `${r.risk} — влияние: ${r.impact}
+            <button type="button" onclick="editRisk(${i})">✏️</button>
+            <button type="button" onclick="deleteRisk(${i})">🗑</button>`;
+        div.appendChild(el);
+    });
+}
+
+function deleteRisk(index) {
+    const risks = JSON.parse(document.getElementById('id_risks').value || '[]');
+    risks.splice(index, 1);
+    document.getElementById('id_risks').value = JSON.stringify(risks);
+    renderRisks();
+}
+
+function addRisk() {
+    const risk = prompt("Введите риск:");
+    const impact = prompt("Введите его влияние:");
+    if (!risk || !impact) return;
+    const risks = JSON.parse(document.getElementById('id_risks').value || '[]');
+    risks.push({risk, impact});
+    document.getElementById('id_risks').value = JSON.stringify(risks);
+    renderRisks();
+}
+
+function editRisk(index) {
+    const risks = JSON.parse(document.getElementById('id_risks').value || '[]');
+    const risk = prompt("Измените риск:", risks[index].risk);
+    const impact = prompt("Измените влияние:", risks[index].impact);
+    if (!risk || !impact) return;
+    risks[index] = {risk, impact};
+    document.getElementById('id_risks').value = JSON.stringify(risks);
+    renderRisks();
+}
+
+window.onload = function () {
+    renderMetrics();
+    renderTeam();
+    renderRisks();
+}
+</script>
+{% endblock %}

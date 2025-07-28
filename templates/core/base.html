@@ -1,0 +1,37 @@
+
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Проекты{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+{% if user.is_authenticated %}
+<header class="site-header">
+    <!-- ЛЕВО: навигация -->
+    <nav class="main-nav">
+        <a href="{% url 'project_list' %}">Проекты</a>
+        <a href="{% url 'calendar' %}">Календарь</a>
+    </nav>
+
+    <!-- ЦЕНТР: название / логотип -->
+    <div class="brand">MyProjectHub</div>
+
+    <!-- ПРАВО: инфо о пользователе -->
+    <div class="user-box">
+        <span>{{ user.username }}</span>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="logout-link">Выйти</button>
+        </form>
+    </div>
+</header>
+{% endif %}
+
+<hr>
+{% block content %}{% endblock %}
+</body>
+</html>
